@@ -44,14 +44,14 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="two"
+                name="addTrip"
                 options={{
                     title: 'Add excursion',
                     tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
                 }}
             />
             <Tabs.Screen
-                name="map"
+                name="mapTab"
                 options={{
                     title: 'Map',
                     tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
