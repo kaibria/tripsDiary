@@ -1,35 +1,83 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet } from 'react-native';
+import {StatusBar} from 'expo-status-bar';
+import {Platform, StyleSheet, TouchableOpacity} from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+import {Text, View} from '../components/Themed';
+import SignIn from './login/SignIn'
+import SignUp from './login/SignUp'
+import React, {useState} from "react";
 
 export default function ModalScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Modal</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/modal.tsx" />
+    const [displayComponent, setDisplayComponent] = useState('');
 
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            {displayComponent === 'signin' && <SignIn/>}
+            {displayComponent === 'signup' && <SignUp/>}
+            {displayComponent === '' && (
+                <View style={styles.buttonView}>
+                    <Text style={styles.title}>Welcome To Trip Diary</Text>
+                    <Text style={styles.text}>Please Login or Register</Text>
+                    <TouchableOpacity style={styles.loginButton} onPress={() => setDisplayComponent('signin')}>
+                        <Text style={styles.loginButtonText}>Login</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.registerButton} onPress={() => setDisplayComponent('signup')}>
+                        <Text style={styles.registerButtonText}>Registration</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+    container: {
+        flex: 1,
+    },
+    title: {
+        fontSize: 30,
+        fontWeight: 'bold',
+    },
+    separator: {
+        marginVertical: 30,
+        height: 1,
+        width: '80%',
+    },
+    text: {
+        fontSize: 20,
+        paddingBottom: 30
+    },
+    loginButton: {
+        width: '90%',
+        height: 40,
+        backgroundColor: '#1E90FF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginTop: 10,
+    },
+    registerButton: {
+        width: '90%',
+        height: 40,
+        backgroundColor: '#FFFFFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginTop: 10,
+        borderColor: '#1E90FF',
+        borderWidth: 1,
+    },
+    loginButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    registerButtonText: {
+        color: '#1E90FF',
+        fontWeight: 'bold',
+    },
+    buttonView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 200
+    },
 });
