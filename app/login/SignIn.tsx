@@ -18,7 +18,8 @@ export default function TabOneScreen() {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                AsyncStorage.setItem('userid', user.uid);
+                AsyncStorage.setItem('userid', user.uid).then();
+
             })
             .catch((error) => {
                 setError("Email or Password is wrong")

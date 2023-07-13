@@ -23,7 +23,7 @@ export default function TabOneScreen() {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    AsyncStorage.setItem('userid', user.uid);
+                    AsyncStorage.setItem('userid', user.uid).then();
                 })
                 .catch((error) => {
                     setError(error.code);
