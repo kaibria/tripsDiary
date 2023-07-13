@@ -3,7 +3,7 @@ import {StyleSheet, TextInput, View, TouchableOpacity, Text} from 'react-native'
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function TabOneScreen() {
+export default function TabOneScreen({setIsVisible, setDisplayComponent}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -19,6 +19,8 @@ export default function TabOneScreen() {
             .then((userCredential) => {
                 const user = userCredential.user;
                 AsyncStorage.setItem('userid', user.uid);
+                setIsVisible(false)
+
             })
             .catch((error) => {
                 setError("Email or Password is wrong")
@@ -50,6 +52,22 @@ export default function TabOneScreen() {
             <TouchableOpacity style={styles.button} onPress={signIn}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
+
+            <View style={{flexDirection: 'row', alignItems: 'center', paddingTop: "10%"}}>
+                <View style={{flex: 1, height: 1, backgroundColor: '#f0f0f0'}} />
+                <View>
+                    <Text style={{width: 50, textAlign: 'center', fontWeight: "bold", color:"black"}}>Oder</Text>
+                </View>
+                <View style={{flex: 1, height: 1, backgroundColor: '#f0f0f0'}} />
+            </View>
+
+            <View style={styles.registration}>
+                <Text>Noch kein Konto?</Text>
+                <TouchableOpacity style={styles.registrationButton} onPress={()=> setDisplayComponent("signup")}>
+                    <Text style={styles.registrationButtonText}>Registration</Text>
+                </TouchableOpacity>
+            </View>
+
         </View>
     );
 }
@@ -82,6 +100,17 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontWeight: 'bold',
+    },
+    registration:{
+        paddingTop: "5%"
+    },
+    registrationButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    registrationButtonText: {
+        color: "#1E90FF",
+
     },
     title: {
         fontSize: 30
