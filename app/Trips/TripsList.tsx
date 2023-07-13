@@ -3,7 +3,7 @@ import {StyleSheet, TextInput, View, TouchableOpacity, Text, SafeAreaView, FlatL
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firebase from "firebase/compat";
-import {db} from '../app/config/firebase'
+import {db} from '../config/firebase'
 
 export default function TabOneScreen() {
     const [userid, setUserid] = useState<any>("");
