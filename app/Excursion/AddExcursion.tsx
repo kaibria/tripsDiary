@@ -2,12 +2,14 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import {useEffect, useState} from "react";
 import {Camera, CameraType} from 'expo-camera';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import AddExcursionInfos from "./AddExcursionInfos";
 
 export default function AddExcursion(){
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean>(true);
     const [camera, setCamera] = useState<Camera | null>();
-    const [image, setImage] = useState<string>();
+    const [image, setImage] = useState<string | null>();
     const [type, setType] = useState(CameraType.back);
+    const [writeExcursionInfos, setWriteExcursionInfos] = useState(false)
     const [imageSource, setImageSource] = useState("")
 
     function toggleCameraType() {
@@ -37,14 +39,26 @@ export default function AddExcursion(){
         setImage(null);
     }
 
+    function safeImage() {
+        setWriteExcursionInfos(true);
+    }
+
     return(
         <View>
-            {image?
+            {writeExcursionInfos?
+                <View>
+                    <AddExcursionInfos imageUri={image} setWriteImageInfos={setWriteExcursionInfos}/>
+                </View>:
+                <View>
+            {image ?
                 <View>
                     <Image source={{uri: image}} style={styles.image}/>
                     <View style={styles.circleButtonContainer}>
-                        <TouchableOpacity style={styles.circleButton} onPress={takeAnother}>
-                            <FontAwesome name="rebel" size={38} color="#25292e" />
+                        <TouchableOpacity style={styles.circleButton} onPress={safeImage}>
+                            <FontAwesome name="check" size={38} color="#25292e" />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.takeAnotherButton} onPress={takeAnother}>
+                                <FontAwesome name="refresh" size={38} color="#25292e" />
                         </TouchableOpacity>
                     </View>
                 </View>:
@@ -53,15 +67,17 @@ export default function AddExcursion(){
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
                             <Text style={styles.text}>
-                                <FontAwesome name="empire" size={38} color="#25292e" /></Text>
+                                <FontAwesome name="rotate-right" size={38} color="#25292e" /></Text>
                         </TouchableOpacity>
                         <View style={styles.circleButtonContainer}>
                             <TouchableOpacity style={styles.circleButton} onPress={takePicture}>
-                                <FontAwesome name="rebel" size={38} color="#25292e" />
+                                <FontAwesome name="camera-retro" size={38} color="#25292e" />
                             </TouchableOpacity>
                         </View>
                     </View>
                 </Camera>}
+                </View>
+            }
         </View>
     )
 }
@@ -84,7 +100,20 @@ const styles = StyleSheet.create({
         top: 630,
         left: '65%',
         backgroundColor: "white",
-        borderRadius: 18,
+        borderRadius: 40,
+        width: 40,
+        height: 40,
+    },
+    takeAnotherButton:{
+        position: "absolute",
+        alignSelf: 'flex-end',
+        alignItems: 'center',
+        top: 37,
+        left: '123%',
+        backgroundColor: "white",
+        borderRadius: 40,
+        width: 40,
+        height: 40,
     },
     text: {
         fontSize: 24,
@@ -107,12 +136,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 42,
         backgroundColor: '#fff',
-    },
-    face: {
-        position : "absolute",
-        left: "40%",
-        top: 300,
-        fontWeight: "bold"
     },
     image: {
         height: '100%',
