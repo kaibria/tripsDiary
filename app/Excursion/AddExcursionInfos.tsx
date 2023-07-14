@@ -1,6 +1,5 @@
 import {
     Image,
-    Pressable,
     StyleSheet,
     View,
     Text,
@@ -15,7 +14,6 @@ import * as Location from 'expo-location';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firebase from "firebase/compat";
 import SelectDropdown from 'react-native-select-dropdown'
-import {db} from "../config/firebase";
 
 
 export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imageUri: string, setWriteImageInfos: (val: boolean) => void} ) {
@@ -33,9 +31,6 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
         console.log("save aufgerufen")
         if (title!=="" && choosenTrip[0] !== null && choosenTrip[0].tripname !== null && location.longitude !== 200){
         let excursion = {excursionname: title,descritpion: description, location: location,date: currentDate?.toDateString(), img: imageUri}
-            console.log("date aufgerufen", currentDate)
-            console.log("loco aufgerufen", location)
-
 
         // Holen Sie die Benutzer-ID wie zuvor
         AsyncStorage.getItem('userid').then((userId: string | null) => {
@@ -50,7 +45,6 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
                     const data = snapshot.val();
 
                     console.log("data aufgerufen", data)
-
 
                     // Wenn die Reise existiert
                     if (data) {
@@ -145,13 +139,9 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
                     data={trips.map((trip:any)=> trip.tripname)}
                     onSelect={(selectedItem, index) =>getTripFromTripName(selectedItem)}
                     buttonTextAfterSelection={(selectedItem, index) => {
-                        // text represented after item is selected
-                        // if data array is an array of objects then return selectedItem.property to render after item is selected
                         return selectedItem
                     }}
                     rowTextForSelection={(item, index) => {
-                        // text represented for each item in dropdown
-                        // if data array is an array of objects then return item.property to represent item in dropdown
                         return item
                     }}
                     buttonStyle={{backgroundColor: "transparent"}}
