@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import TripsList from "../Trips/TripsList";
 import ExcursionList from "../Excursion/ExcursionList"
 
-export default function TabOneScreen() {
+export default function TripList() {
     const [isModalVisible, setIsModalVisible] = useState(true);
     const [selectedTrip, setSelectedTrip] = useState("");
 

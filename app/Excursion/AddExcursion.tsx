@@ -10,7 +10,6 @@ export default function AddExcursion(){
     const [image, setImage] = useState<string | null>();
     const [type, setType] = useState(CameraType.back);
     const [writeExcursionInfos, setWriteExcursionInfos] = useState(false)
-    const [imageSource, setImageSource] = useState("")
 
     function toggleCameraType() {
         setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));

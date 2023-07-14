@@ -11,10 +11,10 @@ import LoginModal from "../login/LoginModal";
 import SelectDropdown from "react-native-select-dropdown";
 import { AntDesign } from '@expo/vector-icons';
 
-export default function TabTwoScreen() {
+export default function Settings() {
     const [trips, setTrips] = useState([])
     const [logout, setLogout] = useState(false)
-    const [isvisible, setIsvisible] = useState(true)
+    const [isvisible, setIsvisible] = useState(false)
     const [selectedTrip, setSelectedTrip] = useState()
     const [userid, setUserid] = useState<string | null>("")
 
@@ -68,9 +68,9 @@ export default function TabTwoScreen() {
 
     return (
         <>
-            {logout ? (
+
                 <LoginModal isVisible={isvisible} setIsVisible={setIsvisible}></LoginModal>
-            ) : (
+
                 <View style={styles.container}>
                     <Text>Wähle einen Trip aus um ihn zu beenden</Text>
                     <SelectDropdown
@@ -95,7 +95,6 @@ export default function TabTwoScreen() {
                         setLogout(true);
                     }}><Text>Logout</Text></Pressable>
                 </View>
-            )}
         </>
     );
 }
