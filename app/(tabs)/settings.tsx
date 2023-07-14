@@ -16,12 +16,14 @@ export default function TabTwoScreen() {
     const [logout, setLogout] = useState(false)
     const [isvisible, setIsvisible] = useState(true)
     const [selectedTrip, setSelectedTrip] = useState()
+    const [userid, setUserid] = useState<string | null>("")
 
     useEffect(() => {
 
         const fetchData = async () => {
             try {
                 const userId = await AsyncStorage.getItem('userid');
+                setUserid(userId)
                 if (userId !== "") {
                     setLogout(false);
                 }
@@ -47,10 +49,11 @@ export default function TabTwoScreen() {
     }, []);
 
     function handleTrip(){
-        const userId = AsyncStorage.getItem('userid');
+
         const selectedTripObj = trips.find((trip: any) => trip.tripname === selectedTrip)
         if (selectedTripObj) {
-            firebase.database().ref(`users/${userId}/trips/${selectedTripObj.key}`).update({
+
+            firebase.database().ref(`users/${JSON.stringify(userid)}/trips/${selectedTripObj.key}`).update({
                 status: true
             }).then(() => {
                 console.log("Status updated successfully.");
