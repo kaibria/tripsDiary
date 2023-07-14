@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
-import {Modal, Text, TextInput, TouchableOpacity, View, StyleSheet, Button, Platform} from 'react-native';
+import {Modal, Text, TextInput, TouchableOpacity, View, StyleSheet, Button, Platform, Pressable} from 'react-native';
+import Geocoder from 'react-native-geocoding';
+import firebase from "firebase/compat";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 interface TripsProps {
@@ -13,37 +16,67 @@ const ProductModal = (props: TripsProps) => {
     const [newTripName, setNewTripName] = useState("");
     const [count, setCount] = useState("");
     const [errormessage, setErrorMessage] = useState("");
+    const [location, setLocation] = useState<any>([]);
     const [show, setShow] = useState(false);
+    const [userid, setUserid] = useState(null)
 
     const handleAdd = () => {
         if (newTripName !== "") {
-            const trip = {
-                tripname: newTripName,
-                location: "",
-                status: false,
-            };
+            Geocoder.init("AIzaSyBh11L0APOKafweWqEMonCy1OqRYRA7sPg");
+            Geocoder.from(newTripName)
+                .then(json => {
+                    const location = json.results[0].geometry.location;
 
-            props.setModalVisible(false);
+                    const trip = {
+                        tripname: newTripName,
+                        longitude: location.lng,
+                        latitude: location.lat,
+                        status: false,
+                        excursions: []
+                    };
 
-            try{
-                props.setTrips([...props.trips, trip]);
-            }catch (error){
-                console.error(error);
-            }
+                    saveTripToFirebase(trip);
+
+                    props.setModalVisible(false);
+                    setErrorMessage("");
+                    setNewTripName("");
+
+                    try {
+                        props.setTrips([...props.trips, trip]);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                })
+                .catch((error) => {
+                    setErrorMessage("Place don't exists");
+                    return;
+                });
         } else {
-            setErrorMessage("Bitte fühle alle Felder aus")
+            setErrorMessage("Bitte fülle das Feld aus");
         }
     };
 
-    const onChange = (event: any, selectedDate: any) => {
-        const currentDate = selectedDate || selectedDate;
-        setShow(Platform.OS === 'ios');
-        setSelectedDate(currentDate);
+    const saveTripToFirebase = (trip: any) => {
+
+        AsyncStorage.getItem('userid').then((value: any) => {
+            if (value !== null) {
+                setUserid(value);
+
+                firebase.database().ref(`users/${value}/trips`).push().set(trip)
+                    .then(() => {
+                        props.setModalVisible(false);
+                        setErrorMessage("");
+                        setNewTripName("");
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            } else {
+
+            }
+        });
     };
 
-    const showDatepicker = () => {
-        setShow(true);
-    };
 
     return (
         <Modal
@@ -56,31 +89,22 @@ const ProductModal = (props: TripsProps) => {
                 <View style={styles.modalView}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Produktname"
-                        value={newProductName}
-                        onChangeText={setNewProductName}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Anzahl"
-                        value={count}
-                        onChangeText={setCount}
-                    />
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={selectedDate}
-                        mode={'date'}
-                        display="default"
-                        onChange={onChange}
-                        style={styles.picker}
+                        placeholder="Trip Name"
+                        value={newTripName}
+                        onChangeText={setNewTripName}
                     />
                     <Text style={styles.error}>{errormessage}</Text>
                     <TouchableOpacity
                         style={styles.button}
                         onPress={handleAdd}
                     >
-                        <Text style={styles.textStyle}>Produkt hinzufügen</Text>
+                        <Text style={styles.textStyle}>Add Trip</Text>
                     </TouchableOpacity>
+                    <Pressable onPress={() => {
+                        props.setModalVisible(false);
+                        setErrorMessage("");
+                        setNewTripName("")
+                    }}><Text>Cancel</Text></Pressable>
                 </View>
             </View>
         </Modal>
@@ -116,7 +140,8 @@ const styles = StyleSheet.create({
         padding: 10,
         elevation: 2,
         backgroundColor: "#2196F3",
-        marginTop: 10
+        marginTop: 10,
+        marginBottom: 10
     },
     textStyle: {
         color: "white",

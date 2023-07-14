@@ -7,7 +7,7 @@ import TripsList from '../Trips/TripsList'
 export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
-      <TripsList></TripsList>
+
     </View>
   );
 }
