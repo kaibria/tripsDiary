@@ -30,7 +30,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="addTrip"
+                name="addExcursion"
                 options={{
                     title: 'Add excursion',
                     tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,

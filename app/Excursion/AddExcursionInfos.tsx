@@ -15,6 +15,7 @@ import * as Location from 'expo-location';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firebase from "firebase/compat";
 import SelectDropdown from 'react-native-select-dropdown'
+import {db} from "../config/firebase";
 
 
 export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imageUri: string, setWriteImageInfos: (val: boolean) => void} ) {
@@ -30,7 +31,35 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
     const [excursion, setExcursion] = useState({excursionname:"",descritpion:"",location:{longitude:1,latitude:1}, date: currentDate})
 
     function save(){
+        if (title!==""){
         setExcursion({excursionname: title,descritpion: description, location: location,date: currentDate})
+
+
+
+        // Holen Sie die Benutzer-ID wie zuvor
+       /* AsyncStorage.getItem('userid').then((userId: string | null) => {
+            if (userId) {
+                // Finden Sie den spezifischen Trip unter den Trips des Benutzers
+                const tripRef = db.ref(`users/${userId}/trips`).orderByChild('tripname').equalTo(tripName);
+
+                tripRef.once('value', (snapshot) => {
+                    const data = snapshot.val();
+
+                    // Wenn die Reise existiert
+                    if (data) {
+                        // Holen Sie sich den Schlüssel (ID) der Reise
+                        const tripId = Object.keys(data)[0];
+
+
+
+                        // Hinzufügen der Ausflüge zur Reise
+                        db.ref(`users/${userId}/trips/${tripId}/excursions`).push(excursion);
+                    }
+                });
+            }
+        });*/
+
+        }
     }
 
     function cancel(){
