@@ -7,7 +7,7 @@ import {
     TextInput,
     KeyboardAvoidingView,
     Platform,
-    Keyboard, TouchableWithoutFeedback
+    Keyboard, TouchableWithoutFeedback, Pressable
 } from "react-native";
 import React, {useEffect, useState} from "react";
 import * as Location from 'expo-location';
@@ -28,38 +28,34 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
     const [choosenTrip, setChoosenTrip] = useState([])
 
     function save(){
-        console.log("save aufgerufen")
         if (title!=="" && choosenTrip[0] !== null && choosenTrip[0].tripname !== null && location.longitude !== 200){
         let excursion = {excursionname: title,descritpion: description, location: location,date: currentDate?.toDateString(), img: imageUri}
 
         // Holen Sie die Benutzer-ID wie zuvor
         AsyncStorage.getItem('userid').then((userId: string | null) => {
             if (userId) {
-                console.log("userid aufgerufen", choosenTrip[0].tripname)
-
                 // Finden Sie den spezifischen Trip unter den Trips des Benutzers
                 const tripRef = firebase.database().ref(`users/${userId}/trips`).orderByChild('tripname').equalTo(choosenTrip[0].tripname);
 
-                console.log("tripref aufgerufen", tripRef)
                 tripRef.once('value', (snapshot:any) => {
                     const data = snapshot.val();
-
-                    console.log("data aufgerufen", data)
 
                     // Wenn die Reise existiert
                     if (data) {
                         // Holen Sie sich den Schlüssel (ID) der Reise
                         const tripId = Object.keys(data)[0];
 
-                        console.log("tripid", tripId)
-
                         // Hinzufügen der Ausflüge zur Reise
                         firebase.database().ref(`users/${userId}/trips/${tripId}/excursions`).push(excursion);
+
+                        let date = new Date();
+
+                        AsyncStorage.setItem('updateMap', date.getSeconds().toString() + date.getMinutes().toString() + date.getHours().toString() + date.getDay().toString()).then();
                     }
                 });
             }
         });
-
+        cancel();
         }
     }
 
@@ -150,13 +146,13 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
                     rowTextStyle={{color: "#1E90FF"}}
                 />
 
-                {location.latitude !== 200?
+                {location.longitude !== 200?
                     <TouchableOpacity style={styles.button} onPress={save} >
-                        <Text>Safe</Text>
-                    </TouchableOpacity>:
-                    <TouchableOpacity style={styles.button} onPress={save} disabled={true}>
-                        <Text>Safe</Text>
-                    </TouchableOpacity>
+                        <Text>Save</Text>
+                    </TouchableOpacity> :
+                    <Pressable style={styles.button} disabled={true}>
+                        <Text>Wait...</Text>
+                    </Pressable>
                 }
 
 
