@@ -3,6 +3,7 @@ import {Modal, Text, TextInput, TouchableOpacity, View, StyleSheet, Button, Plat
 import Geocoder from 'react-native-geocoding';
 import firebase from "firebase/compat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+console.warn = () => {};
 
 
 interface TripsProps {

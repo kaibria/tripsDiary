@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {Camera, CameraType} from 'expo-camera';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AddExcursionInfos from "./AddExcursionInfos";
+console.warn = () => {};
 
 export default function AddExcursion(){
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean>(true);
@@ -46,7 +47,7 @@ export default function AddExcursion(){
         <View>
             {writeExcursionInfos?
                 <View>
-                    <AddExcursionInfos imageUri={image} setWriteImageInfos={setWriteExcursionInfos}/>
+                    <AddExcursionInfos imageUri={image || ""} setWriteImageInfos={setWriteExcursionInfos}/>
                 </View>:
                 <View>
             {image ?

@@ -4,6 +4,7 @@ import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firebase from "firebase/compat";
 import {db} from '../config/firebase'
+console.warn = () => {};
 
 
 export default function ExcursionScreen({excursion, setShowDetails}: { excursion: any, setShowDetails: (excursion: any) => void }) {

@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TripsList from "../Trips/TripsList";
 import ExcursionList from "../Excursion/ExcursionList"
+console.warn = () => {};
 
 export default function TripList() {
     const [isModalVisible, setIsModalVisible] = useState(true);

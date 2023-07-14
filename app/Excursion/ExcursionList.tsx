@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import firebase from "firebase/compat";
 import {db} from '../config/firebase'
 import ExcursionScreen from "./ExcursionScreen";
-
+console.warn = () => {};
 
 export default function ExcursionList({tripname, setSelectedTrip}: { tripname: any, setSelectedTrip: (tripname: string) => void }) {
     const [userid, setUserid] = useState<any>("");

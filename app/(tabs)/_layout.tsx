@@ -3,9 +3,10 @@ import {Link, Tabs} from 'expo-router';
 import {Pressable, useColorScheme} from 'react-native';
 
 import Colors from '../../constants/Colors';
-import React from "react";
+import React, { useEffect } from "react";
 import {AntDesign, Feather} from "@expo/vector-icons";
 import { Fontisto } from '@expo/vector-icons';
+console.warn = () => {};
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/

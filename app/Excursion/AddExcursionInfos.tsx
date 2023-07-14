@@ -14,9 +14,13 @@ import * as Location from 'expo-location';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firebase from "firebase/compat";
 import SelectDropdown from 'react-native-select-dropdown'
+console.warn = () => {};
 
 
 export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imageUri: string, setWriteImageInfos: (val: boolean) => void} ) {
+    type Trip = {
+        tripname: string;
+    };
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -25,27 +29,23 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
     const [errorMsg, setErrorMsg] = useState<string | null>(null)
     const [trips, setTrips] = useState([])
     const [userid, setUserid] = useState<string>("")
-    const [choosenTrip, setChoosenTrip] = useState([])
+    const [choosenTrip, setChoosenTrip] = useState<Trip[]>([]);
 
     function save(){
         if (title!=="" && choosenTrip[0] !== null && choosenTrip[0].tripname !== null && location.longitude !== 200){
         let excursion = {excursionname: title,descritpion: description, location: location,date: currentDate?.toDateString(), img: imageUri}
 
-        // Holen Sie die Benutzer-ID wie zuvor
         AsyncStorage.getItem('userid').then((userId: string | null) => {
             if (userId) {
-                // Finden Sie den spezifischen Trip unter den Trips des Benutzers
+
                 const tripRef = firebase.database().ref(`users/${userId}/trips`).orderByChild('tripname').equalTo(choosenTrip[0].tripname);
 
                 tripRef.once('value', (snapshot:any) => {
                     const data = snapshot.val();
 
-                    // Wenn die Reise existiert
                     if (data) {
-                        // Holen Sie sich den Schlüssel (ID) der Reise
                         const tripId = Object.keys(data)[0];
 
-                        // Hinzufügen der Ausflüge zur Reise
                         firebase.database().ref(`users/${userId}/trips/${tripId}/excursions`).push(excursion);
 
                         let date = new Date();
