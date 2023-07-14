@@ -58,7 +58,7 @@ export default function AddExcursion(){
                             <FontAwesome name="check" size={38} color="#25292e" />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.takeAnotherButton} onPress={takeAnother}>
-                                <FontAwesome name="refresh" size={38} color="#25292e" />
+                                <FontAwesome name="rotate-right" size={38} color="#25292e" />
                         </TouchableOpacity>
                     </View>
                 </View>:
@@ -67,7 +67,7 @@ export default function AddExcursion(){
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
                             <Text style={styles.text}>
-                                <FontAwesome name="rotate-right" size={38} color="#25292e" /></Text>
+                                <FontAwesome name="refresh" size={38} color="#25292e" /></Text>
                         </TouchableOpacity>
                         <View style={styles.circleButtonContainer}>
                             <TouchableOpacity style={styles.circleButton} onPress={takePicture}>

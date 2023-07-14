@@ -22,42 +22,49 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
-    const [location, setLocation] = useState({longitude: 1, latitude: 1})
+    const [location, setLocation] = useState({longitude: 200, latitude: 0})
     const [currentDate, setCurrentDate] = useState<Date | null>()
     const [errorMsg, setErrorMsg] = useState<string | null>(null)
     const [trips, setTrips] = useState([])
     const [userid, setUserid] = useState<string>("")
     const [choosenTrip, setChoosenTrip] = useState([])
-    const [excursion, setExcursion] = useState({excursionname:"",descritpion:"",location:{longitude:1,latitude:1}, date: currentDate})
 
     function save(){
-        if (title!==""){
-        setExcursion({excursionname: title,descritpion: description, location: location,date: currentDate})
-
+        console.log("save aufgerufen")
+        if (title!=="" && choosenTrip[0] !== null && choosenTrip[0].tripname !== null && location.longitude !== 200){
+        let excursion = {excursionname: title,descritpion: description, location: location,date: currentDate?.toDateString(), img: imageUri}
+            console.log("date aufgerufen", currentDate)
+            console.log("loco aufgerufen", location)
 
 
         // Holen Sie die Benutzer-ID wie zuvor
-       /* AsyncStorage.getItem('userid').then((userId: string | null) => {
+        AsyncStorage.getItem('userid').then((userId: string | null) => {
             if (userId) {
-                // Finden Sie den spezifischen Trip unter den Trips des Benutzers
-                const tripRef = db.ref(`users/${userId}/trips`).orderByChild('tripname').equalTo(tripName);
+                console.log("userid aufgerufen", choosenTrip[0].tripname)
 
-                tripRef.once('value', (snapshot) => {
+                // Finden Sie den spezifischen Trip unter den Trips des Benutzers
+                const tripRef = firebase.database().ref(`users/${userId}/trips`).orderByChild('tripname').equalTo(choosenTrip[0].tripname);
+
+                console.log("tripref aufgerufen", tripRef)
+                tripRef.once('value', (snapshot:any) => {
                     const data = snapshot.val();
+
+                    console.log("data aufgerufen", data)
+
 
                     // Wenn die Reise existiert
                     if (data) {
                         // Holen Sie sich den Schlüssel (ID) der Reise
                         const tripId = Object.keys(data)[0];
 
-
+                        console.log("tripid", tripId)
 
                         // Hinzufügen der Ausflüge zur Reise
-                        db.ref(`users/${userId}/trips/${tripId}/excursions`).push(excursion);
+                        firebase.database().ref(`users/${userId}/trips/${tripId}/excursions`).push(excursion);
                     }
                 });
             }
-        });*/
+        });
 
         }
     }
@@ -74,9 +81,9 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
                 setErrorMsg('Permission to access location was denied');
                 return;
             }
-
             let geoLocation = await Location.getCurrentPositionAsync({});
-            setLocation(geoLocation.coords);
+            setLocation({longitude: geoLocation.coords.longitude,latitude: geoLocation.coords.latitude});
+            console.log(geoLocation.coords);
 
         })();
     }
@@ -87,7 +94,7 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
                 const userId = await AsyncStorage.getItem('userid');
                 if (userId !== null) {
                     setUserid(userId);
-                    const snapshot = await firebase.database().ref(`users/4tqlrVk73CMYZPOnD3XNUftQBk33/trips`).once('value');
+                    const snapshot = await firebase.database().ref(`users/${userId}/trips`).once('value');
 
                     const tripsData:any = [];
                     snapshot.forEach((childSnapshot) => {
@@ -115,9 +122,6 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
         getLocation();
 
         setTripsFromDb();
-
-        console.log("tripper",trips);
-
 
     }, []);
 
@@ -156,9 +160,15 @@ export default function AddExcursionInfos( {imageUri, setWriteImageInfos}: {imag
                     rowTextStyle={{color: "#1E90FF"}}
                 />
 
-            <TouchableOpacity style={styles.button} onPress={save}>
-                <Text>Safe</Text>
-            </TouchableOpacity>
+                {location.latitude !== 200?
+                    <TouchableOpacity style={styles.button} onPress={save} >
+                        <Text>Safe</Text>
+                    </TouchableOpacity>:
+                    <TouchableOpacity style={styles.button} onPress={save} disabled={true}>
+                        <Text>Safe</Text>
+                    </TouchableOpacity>
+                }
+
 
             <TouchableOpacity onPress={()=> cancel()} style={styles.cancelButton}>
                 <Text style={styles.cancelButtonText}>Cancel</Text>
