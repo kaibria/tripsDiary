@@ -4,7 +4,7 @@ import {Text, View} from "../../components/Themed";
 import {Modal, StyleSheet, TouchableOpacity} from "react-native";
 import React, {useState} from "react";
 
-export default function LoginModal({isVisible, setIsVisible}) {
+export default function LoginModal({isVisible, setIsVisible}: {isVisible: any, setIsVisible:any}) {
     const [displayComponent, setDisplayComponent] = useState('');
 
     return (

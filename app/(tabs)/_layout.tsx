@@ -3,7 +3,9 @@ import {Link, Tabs} from 'expo-router';
 import {Pressable, useColorScheme} from 'react-native';
 
 import Colors from '../../constants/Colors';
-import {useState} from "react";
+import React from "react";
+import {AntDesign, Feather} from "@expo/vector-icons";
+import { Fontisto } from '@expo/vector-icons';
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -27,21 +29,28 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: 'Trips',
-                    tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
+                    tabBarIcon: ({color}) => <Fontisto name="holiday-village" size={24} color="black" />,
                 }}
             />
             <Tabs.Screen
                 name="addExcursion"
                 options={{
                     title: 'Add excursion',
-                    tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
+                    tabBarIcon: ({color}) => <AntDesign name="pluscircleo" size={24} color="black" />,
                 }}
             />
             <Tabs.Screen
                 name="mapTab"
                 options={{
                     title: 'Map',
-                    tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
+                    tabBarIcon: ({color}) => <Feather name="map" size={24} color="black" />,
+                }}
+            />
+            <Tabs.Screen
+                name="settings"
+                options={{
+                    title: 'settings',
+                    tabBarIcon: ({color}) => <Feather name="settings" size={24} color="black" />,
                 }}
             />
         </Tabs>

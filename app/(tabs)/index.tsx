@@ -10,13 +10,11 @@ import ExcursionList from "../Excursion/ExcursionList"
 
 export default function TabOneScreen() {
     const [isModalVisible, setIsModalVisible] = useState(true);
-    const [userid, setUserid] = useState(null)
     const [selectedTrip, setSelectedTrip] = useState("");
 
     useEffect(() => {
         AsyncStorage.getItem('userid').then((value) => {
-            if (value !== null) {
-                setUserid(value);
+            if (value !== "") {
                 setIsModalVisible(false)
             } else {
                 setIsModalVisible(true)
@@ -29,7 +27,7 @@ export default function TabOneScreen() {
             {selectedTrip === "" ? (
                 <TripsList setSelectedTrip={setSelectedTrip}></TripsList>
             ) : (
-                <ExcursionList tripname={selectedTrip}></ExcursionList>
+                <ExcursionList tripname={selectedTrip} setSelectedTrip={setSelectedTrip}></ExcursionList>
             )}
             <LoginModal isVisible={isModalVisible} setIsVisible={setIsModalVisible}/>
         </View>

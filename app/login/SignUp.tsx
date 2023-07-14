@@ -3,7 +3,7 @@ import {StyleSheet, TextInput, View, TouchableOpacity, Text} from 'react-native'
 import {getAuth, createUserWithEmailAndPassword} from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function TabOneScreen( {setIsVisible, setDisplayComponent} ) {
+export default function SignUp( {setIsVisible, setDisplayComponent}: {setIsVisible: any, setDisplayComponent:any} ) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [secondPassword, setSecondPassword] = useState("");
