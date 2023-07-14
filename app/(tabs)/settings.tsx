@@ -92,7 +92,7 @@ export default function Settings() {
 
                     <Pressable onPress={() => {
                         AsyncStorage.setItem('userid', "");
-                        setLogout(true);
+                        setIsvisible(true);
                     }}><Text>Logout</Text></Pressable>
                 </View>
         </>
