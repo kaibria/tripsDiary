@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, TextInput, View, TouchableOpacity, Text, SafeAreaView, FlatList} from 'react-native';
+import {StyleSheet, TextInput, View, TouchableOpacity, Text, SafeAreaView, FlatList, Image} from 'react-native';
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firebase from "firebase/compat";
 import {db} from '../config/firebase'
-import AddTrips from './AddTrips'
 
-export default function TripsList({setSelectedTrip}: { setSelectedTrip: (tripname: string) => void }) {
+
+export default function TabOneScreen(tripname:any) {
     const [userid, setUserid] = useState<any>("");
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [showExcursion, setShowExcursion] = useState(false)
-    const [trips, setTrips] = useState<any>([])
+    const [excursions, SetExcursions] = useState([])
+    const [isModalVisible, setIsModalVisible] = React.useState(false);
+    const [error, setError] = useState("")
 
     useEffect(() => {
         const fetchData = async () => {
@@ -20,17 +20,18 @@ export default function TripsList({setSelectedTrip}: { setSelectedTrip: (tripnam
                     setUserid(userId);
                     const snapshot = await firebase.database().ref(`users/${userId}/trips`).once('value');
 
-                    const tripsData:any = [];
                     snapshot.forEach((childSnapshot) => {
                         var trip = childSnapshot.val();
-                        trip.key = childSnapshot.key;
-                        tripsData.push(trip);
+                        if (trip.tripname === tripname) {
+                            SetExcursions(trip.excursions);
+                        }
                     });
-
-                    setTrips(tripsData);
                 }
             } catch (error) {
-                console.error(error);
+                if(excursions.length === 0 ){
+                    setError("No excursions found")
+                }
+
             }
         };
 
@@ -40,38 +41,35 @@ export default function TripsList({setSelectedTrip}: { setSelectedTrip: (tripnam
 
     const handleModal = () => setIsModalVisible(() => !isModalVisible);
 
-    const handleTrip = (tripname: string) => {
-        setSelectedTrip(tripname);
-    };
-
     const renderItem = ({item}: { item: any }) => (
-        <TouchableOpacity onPress={() => handleTrip(item.tripname)}>
-            <View style={styles.itemContainer}>
-                <Text style={styles.itemTitle}>{item.tripname}</Text>
-                <Text style={styles.itemSubtitle}>{item.location}</Text>
+        <View style={styles.itemContainer}>
+            <Image
+                source={{uri: item.image}}
+                style={styles.image}
+            />
+            <View style={styles.textContainer}>
+                <Text style={styles.itemTitle}>{item.excursionname}</Text>
+                <Text style={styles.itemSubtitle}>{item.date}</Text>
             </View>
-        </TouchableOpacity>
+        </View>
     );
 
     return (
         <SafeAreaView style={styles.container}>
-            <FlatList style={styles.list} data={trips} renderItem={renderItem}
-                      keyExtractor={(item, index) => index.toString()}></FlatList>
-
+            {error ? <Text style={{color: 'red'}}>{error}</Text> : null}
+            <FlatList
+                style={styles.list}
+                data={excursions}
+                ListEmptyComponent={<Text>No excursions found</Text>}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+            />
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => {
-                    handleModal()
-                }}
+                onPress={handleModal}
             >
-                <Text style={styles.buttonText}>Trip hinzufügen</Text>
+                <Text style={styles.buttonText}>Add excursions</Text>
             </TouchableOpacity>
-            <AddTrips
-                modalVisible={isModalVisible}
-                setModalVisible={setIsModalVisible}
-                trips={trips}
-                setTrips={setTrips}
-            />
         </SafeAreaView>
     );
 }
@@ -83,9 +81,9 @@ const styles = StyleSheet.create({
         paddingTop: 40,
     },
     itemContainer: {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        justifyContent: 'space-between',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
         padding: 10,
         margin: 5,
         backgroundColor: '#f9f9f9',
@@ -98,6 +96,14 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.20,
         shadowRadius: 1.41,
         elevation: 2,
+    },
+    textContainer: {
+        marginLeft: 10
+    },
+    image: {
+        width: 50,
+        height: 50,
+        borderRadius: 25
     },
     listContainer: {
         alignSelf: 'stretch',
